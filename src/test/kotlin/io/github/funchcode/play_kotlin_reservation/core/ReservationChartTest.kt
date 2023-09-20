@@ -30,7 +30,7 @@ class ReservationChartTest {
 
         val chart = ReservationChart(subject)
 
-        Assertions.assertThrows(Exception::class.java) {
+        Assertions.assertThrows(AlreadyReservedException::class.java) {
             chart.reserve(clientId, from, to)
         }
     }
