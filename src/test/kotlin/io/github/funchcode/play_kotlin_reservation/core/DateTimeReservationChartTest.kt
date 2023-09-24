@@ -11,7 +11,7 @@ class DateTimeReservationChartTest {
     @Test
     @DisplayName("예약이 가능한지 확인한다.")
     fun availableReservation() {
-        val subject = Subject()
+        val subject = Subject("sbj-t-01", null)
         val from = LocalDateTime.now()
         val to = LocalDateTime.now()
 
@@ -23,7 +23,7 @@ class DateTimeReservationChartTest {
     @Test
     @DisplayName("대상을 예약한다.")
     fun reserveSubject() {
-        val subject = Subject()
+        val subject = Subject("sbj-t-01", null)
         val clientId = ""
         val from = LocalDateTime.now()
         val to = LocalDateTime.now()
@@ -36,7 +36,7 @@ class DateTimeReservationChartTest {
     @Test
     @DisplayName("이미 예약이 된 상태라면 이미 예약되어 있다는 예외가 발생한다.")
     fun reservedSubjectError() {
-        val subject = Subject()
+        val subject = Subject("sbj-t-01", null)
         val clientId = ""
         val from = LocalDateTime.now()
         val to = LocalDateTime.now()
