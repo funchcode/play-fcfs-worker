@@ -2,7 +2,7 @@ package io.github.funchcode.play_kotlin_reservation.core
 
 import java.time.LocalDateTime
 
-class TimeReservationChart(subject: Subject): ReservationChart {
+class TimeReservationChart(timeSubject: TimeSubject): ReservationChart {
 
     override fun available(from: LocalDateTime, to: LocalDateTime): Boolean {
         return false
