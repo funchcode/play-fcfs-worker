@@ -11,10 +11,10 @@ class Reservation(subjectId: String, clientId: String, val from: LocalDateTime, 
         if (this.from.isEqual(to) || this.to.isEqual(to)) {
             return true
         }
-        if (this.from.isAfter(to) && this.to.isBefore(to)) {
+        if (to.isAfter(this.from) && to.isBefore(this.to)) {
             return true
         }
-        if (this.from.isAfter(from) && this.from.isBefore(from)) {
+        if (from.isAfter(this.from) && from.isBefore(this.to)) {
             return true
         }
         return false

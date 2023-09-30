@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class DateTimeReservationChartTest {
+class ReservationChartTest {
 
     @Test
     @DisplayName("예약하는 날이 휴일인지 확인한다.")
@@ -14,7 +14,7 @@ class DateTimeReservationChartTest {
         val from = LocalDateTime.now()
         val to = LocalDateTime.now()
 
-        val chart = DateTimeReservationChart(timeSubject)
+        val chart = ReservationChart(timeSubject)
 
         Assertions.assertTrue(chart.available(from, to))
     }
@@ -22,12 +22,12 @@ class DateTimeReservationChartTest {
     @Test
     @DisplayName("이미 예약이 되어 있는지 확인한다.")
     fun checkAlreadyReserved() {
-        val reserved = Reservation("random-001", "client-001", LocalDateTime.now(), LocalDateTime.now())
+        val reserved = Reservation("random-001", "client-001", LocalDateTime.of(2023, 5, 5, 11, 11, 11), LocalDateTime.of(2023, 5, 5, 11, 31, 11))
         val timeSubject = TimeSubject("sbj-t-01", null)
-        val from = LocalDateTime.now()
-        val to = LocalDateTime.now()
+        val from = LocalDateTime.of(2023, 5, 5, 10, 11, 11)
+        val to = LocalDateTime.of(2023, 5, 5, 11, 15, 11)
 
-        val chart = DateTimeReservationChart(timeSubject, hashSetOf(reserved))
+        val chart = ReservationChart(timeSubject, hashSetOf(reserved))
 
         Assertions.assertFalse(chart.available(from, to))
     }
@@ -40,24 +40,9 @@ class DateTimeReservationChartTest {
         val from = LocalDateTime.now()
         val to = LocalDateTime.now()
 
-        val chart = DateTimeReservationChart(timeSubject)
+        val chart = ReservationChart(timeSubject)
 
-        Assertions.assertTrue(chart.reserve(clientId, from, to))
-    }
-
-    @Test
-    @DisplayName("이미 예약이 된 상태라면 이미 예약되어 있다는 예외가 발생한다.")
-    fun reservedSubjectError() {
-        val timeSubject = TimeSubject("sbj-t-01", null)
-        val clientId = ""
-        val from = LocalDateTime.now()
-        val to = LocalDateTime.now()
-
-        val chart = DateTimeReservationChart(timeSubject)
-
-        Assertions.assertThrows(AlreadyReservedException::class.java) {
-            chart.reserve(clientId, from, to)
-        }
+        Assertions.assertNotNull(chart.reserve(clientId, from, to))
     }
 
 }

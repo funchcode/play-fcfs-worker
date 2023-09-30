@@ -5,6 +5,10 @@ import java.time.LocalDateTime
 
 class DateSubject(private val id: String, private val closedDays: Set<LocalDate>?) : Subject {
 
+    override fun getId(): String {
+        return id
+    }
+
     override fun closedDay(from: LocalDateTime, to: LocalDateTime): Boolean {
         if (from.isAfter(to)) {
             throw ReservationTimeException()
