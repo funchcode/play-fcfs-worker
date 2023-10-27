@@ -1,0 +1,4 @@
+package init
+
+class CreateDynamoTable {
+}
