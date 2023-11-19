@@ -11,17 +11,6 @@
 이번 프로젝트를 통해 Kotlin을 경험해본다.  
 Kotlin에서 경량화된 스레드라고 할 수 있는 coroutine을 이용한다.
 
-### Java
-
-사용해왔던 기술인 Spring MVC, JPA의 개념을 다시 한번 정리하기 위해 Java를 사용하기로 결정했다.   
-*본 레파지토리 FCFS SQS Consumer에서는 Java를 사용하지 않는다.
-
-### Redis
-
-API 서버 단에서 트래픽을 빠르고 효율적으로 처리하기 위해 Redis를 사용하기로 결정했다.   
-메모리 기반로 빠르게 데이터를 읽올 수 있는 Key-Value Store DB인 Redis를 경험해본다.  
-*본 레파지토리 FCFS SQS Consumer에서는 Redis를 사용하지 않는다.
-
 ### SQS
 
 API 서버의 부하를 줄이고 요청된 순서를 보장받기 위해 AWS SQS를 사용하기로 결정했다.

@@ -5,7 +5,7 @@ plugins {
 	kotlin("jvm") version "1.8.22"
 }
 
-group = "io.github.funchcode"
+group = "io.github.funch"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -24,6 +24,10 @@ repositories {
 
 dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
+	implementation("com.amazonaws:aws-java-sdk-dynamodb:1.12.592")
+
 }
 
 tasks.withType<KotlinCompile> {

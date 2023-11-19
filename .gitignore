@@ -1,3 +1,6 @@
+src/main/kotlin/io/github/funch/fcfs/common/PrivateConfig.kt
+
+###
 HELP.md
 .gradle
 build/
