@@ -1,8 +1,8 @@
-import kotlinx.coroutines.*
-import kotlin.system.measureNanoTime
+import io.github.funch.fcfs.SqsConsumer
+import kotlinx.coroutines.runBlocking
 
 fun main() {
-
-
-
+    runBlocking {
+        SqsConsumer().start()
+    }
 }
