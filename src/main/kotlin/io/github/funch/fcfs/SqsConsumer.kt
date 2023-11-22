@@ -1,5 +1,6 @@
 package io.github.funch.fcfs
 
+import io.github.funch.fcfs.common.Configs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -19,7 +20,7 @@ import java.lang.Thread.currentThread
 class SqsConsumer {
 
     private var sqs: SqsAsyncClient = SqsAsyncClient.builder()
-            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create("", "")))
+            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(Configs.getAwsCredentialAccessKey(), Configs.getAwsCredentialSecretKey())))
             .region(Region.AP_NORTHEAST_2)
             .build()
 
@@ -37,7 +38,7 @@ class SqsConsumer {
             for (message in channel) {
                 println("${message.body()}")
                 sqs.deleteMessage {
-                    it.queueUrl("")
+                    it.queueUrl(Configs.getAwsSqsUrl())
                     it.receiptHandle(message.receiptHandle())
                 }
             }
@@ -48,7 +49,7 @@ class SqsConsumer {
         while (isActive) {
             println("${currentThread().name} receiver")
             val receiverRequest = ReceiveMessageRequest.builder()
-                    .queueUrl("")
+                    .queueUrl(Configs.getAwsSqsUrl())
                     .waitTimeSeconds(5)
                     .maxNumberOfMessages(10)
                     .build()
