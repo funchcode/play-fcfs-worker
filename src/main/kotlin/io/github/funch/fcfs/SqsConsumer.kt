@@ -19,7 +19,8 @@ import java.lang.Thread.currentThread
 
 class SqsConsumer {
 
-    private var sqs: SqsAsyncClient = SqsAsyncClient.builder()
+    private val processor = Processor()
+    private val sqs: SqsAsyncClient = SqsAsyncClient.builder()
             .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(Configs.getAwsCredentialAccessKey(), Configs.getAwsCredentialSecretKey())))
             .region(Region.AP_NORTHEAST_2)
             .build()
@@ -34,13 +35,17 @@ class SqsConsumer {
 
     fun CoroutineScope.launchProcessor(channel: ReceiveChannel<Message>) = launch {
         while (isActive) {
-            println("${currentThread().name} processor")
-            for (message in channel) {
-                println("${message.body()}")
-                sqs.deleteMessage {
-                    it.queueUrl(Configs.getAwsSqsUrl())
-                    it.receiptHandle(message.receiptHandle())
+            try {
+                println("${currentThread().name} processor")
+                for (message in channel) {
+                    processor.processMessage(message)
+//                    sqs.deleteMessage {
+//                        it.queueUrl(Configs.getAwsSqsUrl())
+//                        it.receiptHandle(message.receiptHandle())
+//                    }
                 }
+            } catch (ex: IllegalAccessException) {
+                println(ex.message)
             }
         }
     }

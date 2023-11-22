@@ -1,4 +1,3 @@
 package io.github.funch.fcfs.mq
 
-class TicketMessage {
-}
+data class TicketMessage(val subjectId: String, val clientId: String) {}

@@ -25,6 +25,8 @@ repositories {
 dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson
+	implementation("com.google.code.gson:gson:2.10.1")
 	// https://mvnrepository.com/artifact/io.awspring.cloud/spring-cloud-aws-sqs
 	implementation("io.awspring.cloud:spring-cloud-aws-sqs:3.0.3")
 	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
