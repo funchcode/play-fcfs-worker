@@ -7,6 +7,12 @@ data class Ticket (
         val clientId: String,
 ) {
 
+    companion object {
+        fun newInstance(subject: Subject, clientId: String): Ticket {
+            return Ticket(subject, clientId)
+        }
+    }
+
     fun checkIssueable() {
         subject.checkIssueable()
     }
