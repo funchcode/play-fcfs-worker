@@ -4,7 +4,7 @@ class Configs {
 
     companion object Constants : Config {
 
-        val targetConfig = PrivateConfig
+        private var targetConfig: Config = PublicConfig
 
         override fun getAwsSqsUrl(): String {
             return targetConfig.getAwsSqsUrl()
@@ -16,6 +16,10 @@ class Configs {
 
         override fun getAwsCredentialSecretKey(): String {
             return targetConfig.getAwsCredentialSecretKey()
+        }
+
+        fun setConfig(config: Config) {
+            targetConfig = config
         }
 
     }

@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 class Subject {
     private val id: String
+
     val limitedQuantityOf: Int
     private val openDate: LocalDateTime
     private val deadlineDate: LocalDateTime
@@ -53,6 +54,22 @@ class Subject {
             // "발급할 수 없는 기간입니다."
             throw TicketIssueException()
         }
+    }
+
+    fun getId(): String {
+        return id
+    }
+
+    fun getOpenDate(): LocalDateTime {
+        return openDate
+    }
+
+    fun getDeadlineDate(): LocalDateTime {
+        return deadlineDate
+    }
+
+    fun getStatus(): Status {
+        return status
     }
 
 }

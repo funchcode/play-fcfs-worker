@@ -1,29 +1,26 @@
 package io.github.funch.fcfs
 
 import io.github.funch.fcfs.common.Configs
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.future.await
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
-import software.amazon.awssdk.regions.Region
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
 import software.amazon.awssdk.services.sqs.model.Message
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
 import java.lang.Thread.currentThread
+import kotlin.coroutines.CoroutineContext
 
-class SqsConsumer {
+class SqsConsumer(private val sqs: SqsAsyncClient): CoroutineScope {
 
     private val processor = Processor()
-    private val sqs: SqsAsyncClient = SqsAsyncClient.builder()
-            .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(Configs.getAwsCredentialAccessKey(), Configs.getAwsCredentialSecretKey())))
-            .region(Region.AP_NORTHEAST_2)
-            .build()
+    private val supervisorJob = SupervisorJob()
+    private val mutex = Mutex()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.IO + supervisorJob
 
     fun start() = runBlocking {
         val messageChannel = Channel<Message>()
@@ -33,24 +30,26 @@ class SqsConsumer {
         launchMessageReceiver(messageChannel)
     }
 
-    fun CoroutineScope.launchProcessor(channel: ReceiveChannel<Message>) = launch {
+    private fun CoroutineScope.launchProcessor(channel: ReceiveChannel<Message>) = launch {
         while (isActive) {
-            try {
-                println("${currentThread().name} processor")
-                for (message in channel) {
-                    processor.processMessage(message)
-//                    sqs.deleteMessage {
-//                        it.queueUrl(Configs.getAwsSqsUrl())
-//                        it.receiptHandle(message.receiptHandle())
-//                    }
+            println("${currentThread().name} processor")
+            for (message in channel) {
+                try {
+                    mutex.withLock {
+                        processor.processMessage(message)
+                    }
+                    sqs.deleteMessage {
+                        it.queueUrl(Configs.getAwsSqsUrl())
+                        it.receiptHandle(message.receiptHandle())
+                    }.await()
+                } catch (ex: IllegalAccessException) {
+                    println(ex.printStackTrace())
                 }
-            } catch (ex: IllegalAccessException) {
-                println(ex.message)
             }
         }
     }
 
-    fun CoroutineScope.launchMessageReceiver(channel: SendChannel<Message>) = launch {
+    private fun CoroutineScope.launchMessageReceiver(channel: SendChannel<Message>) = launch {
         while (isActive) {
             println("${currentThread().name} receiver")
             val receiverRequest = ReceiveMessageRequest.builder()

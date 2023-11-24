@@ -9,7 +9,7 @@ class Ticketer(
 ) {
 
     fun ticketing(subjectId: String, clientId: String) {
-        val subject = subjectRepository.findById(subjectId)
+        val subject = subjectRepository.findById(subjectId).orElseThrow()
         val tickets = ticketRepository.findAllBySubjectId(subjectId)
         val subjectTickets = SubjectTickets(subject, tickets.toSet())
         val ticket = subjectTickets.issueTicket(clientId)
